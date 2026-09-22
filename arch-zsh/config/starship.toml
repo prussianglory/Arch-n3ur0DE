@@ -1,0 +1,149 @@
+# ==============================================================================
+# Starship — prompt для нашего Arch + Hyprland rice
+# Файл: ~/.config/starship.toml
+#
+# Тёмный минималистичный prompt с теми же фиолетовыми акцентами,
+# что Kitty и Waybar.
+# ==============================================================================
+
+add_newline = true
+command_timeout = 800
+
+# Левая часть: контекст + каталог + Git + активный toolchain.
+format = """
+[╭─](bold #5b5769)\
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_status\
+$python\
+$rust\
+$c\
+$golang\
+$nodejs\
+$java\
+$docker_context\
+$package\
+$line_break\
+[╰─](bold #5b5769)\
+$character"""
+
+# Справа — результат/длительность команды, jobs и время.
+right_format = """$status$cmd_duration$jobs$time"""
+
+[username]
+show_always = false
+style_user = "bold #b487ff"
+style_root = "bold #ff6b81"
+format = "[$user]($style)"
+
+[hostname]
+ssh_only = true
+style = "bold #6fd6e5"
+format = "[@$hostname]($style) "
+
+[directory]
+style = "bold #9c8cff"
+read_only = " 󰌾"
+read_only_style = "#ff6b81"
+truncation_length = 4
+truncate_to_repo = true
+format = "[󰉋 $path]($style)[$read_only]($read_only_style) "
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+"Projects" = "󰲋 "
+
+[git_branch]
+symbol = "󰘬 "
+style = "bold #b487ff"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "#cbc8d8"
+format = "([$all_status$ahead_behind]($style) )"
+conflicted = "󰞇 "
+ahead = "⇡${count} "
+behind = "⇣${count} "
+diverged = "⇕⇡${ahead_count}⇣${behind_count} "
+untracked = "?${count} "
+stashed = "󰏗 "
+modified = "!${count} "
+staged = "+${count} "
+renamed = "»${count} "
+deleted = "✘${count} "
+
+[character]
+success_symbol = "[❯](bold #7c6cff)"
+error_symbol = "[❯](bold #ff6b81)"
+vimcmd_symbol = "[❮](bold #78dba9)"
+
+[status]
+disabled = false
+symbol = "󰅙 "
+success_symbol = ""
+format = "[$symbol$status]($style) "
+style = "bold #ff6b81"
+
+[cmd_duration]
+min_time = 2000
+show_milliseconds = false
+style = "#e8c97a"
+format = "[󰔟 $duration]($style) "
+
+[jobs]
+symbol = "󰜎 "
+style = "#6fd6e5"
+format = "[$symbol$number]($style) "
+number_threshold = 1
+
+[time]
+disabled = false
+time_format = "%H:%M"
+style = "#5b5769"
+format = "[$time]($style)"
+
+[python]
+symbol = " "
+style = "#e8c97a"
+format = "[$symbol$pyenv_prefix($version )(\\($virtualenv\\) )]($style)"
+
+[rust]
+symbol = " "
+style = "#ff8798"
+format = "[$symbol($version )]($style)"
+
+[c]
+symbol = " "
+style = "#7aa2f7"
+format = "[$symbol($version )]($style)"
+
+[golang]
+symbol = " "
+style = "#6fd6e5"
+format = "[$symbol($version )]($style)"
+
+[nodejs]
+symbol = " "
+style = "#78dba9"
+format = "[$symbol($version )]($style)"
+
+[java]
+symbol = " "
+style = "#ff8798"
+format = "[$symbol($version )]($style)"
+
+[docker_context]
+symbol = " "
+style = "#6fd6e5"
+only_with_files = true
+format = "[$symbol$context]($style) "
+
+[package]
+symbol = "󰏗 "
+style = "#cbc8d8"
+format = "[$symbol$version]($style) "

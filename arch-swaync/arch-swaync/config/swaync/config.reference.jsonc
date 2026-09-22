@@ -1,0 +1,43 @@
+// Annotated companion for config.json.
+// SwayNC reads config.json, NOT this file.
+// Reload config with: swaync-client -R
+//
+// Important choices:
+// - top/right placement
+// - fixed 440x680 control center
+// - grouped notifications
+// - critical notifications stay until dismissed
+// - quick toggles for Wi-Fi/Bluetooth
+// - Audio opens pavucontrol
+// - Network reuses our Kitty+nmtui integration
+// - volume + MPRIS widgets
+//
+// Edit config.json to change actual behavior.
+//
+// Widget order:
+//
+// "widgets": [
+//   "title",
+//   "dnd",
+//   "buttons-grid#quick-settings",
+//   "volume",
+//   "mpris",
+//   "notifications"
+// ]
+//
+// Main geometry:
+//
+// "control-center-width": 440,
+// "control-center-height": 680,
+// "notification-window-width": 430
+//
+// Timeouts:
+//
+// "timeout-low": 4,
+// "timeout": 7,
+// "timeout-critical": 0
+//
+// Hyprland layer namespaces used later:
+//
+// swaync-control-center
+// swaync-notification-window

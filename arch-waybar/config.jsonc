@@ -1,0 +1,320 @@
+{
+  // ============================================================================
+  // WAYBAR — основной конфиг для нашего Arch + Hyprland rice
+  // ============================================================================
+  // Идея панели:
+  //   LEFT   -> launcher, workspaces, submap, активное окно
+  //   CENTER -> часы + дата
+  //   RIGHT  -> CPU, RAM, GPU, CPU temp, сеть, звук, Bluetooth, tray,
+  //             уведомления и питание
+  //
+  // Waybar использует JSONC, поэтому комментарии // допустимы.
+  // После изменения этого файла можно выполнить:
+  //   ~/.config/waybar/scripts/reload-waybar.sh
+  // или:
+  //   pkill -SIGUSR2 waybar
+  // ============================================================================
+
+  "name": "main",
+
+  // Панель должна быть поверх окон. Для Hyprland это почти всегда то, что нужно.
+  "layer": "top",
+  "position": "top",
+
+  // Фиксированная высота делает внешний вид стабильнее между перезапусками.
+  "height": 38,
+
+  // Создаём визуальный эффект "плавающей" панели.
+  "margin-top": 8,
+  "margin-left": 10,
+  "margin-right": 10,
+
+  // Интервал между модулями. Основные внутренние отступы задаются уже в CSS.
+  "spacing": 6,
+
+  // Waybar резервирует место, поэтому окна не залезают под панель.
+  "exclusive": true,
+
+  // Центральный блок действительно остаётся по центру монитора.
+  "fixed-center": true,
+
+  // CSS будет автоматически перечитываться после сохранения style.css.
+  // Очень удобно, когда правишь тему "на живую".
+  "reload_style_on_change": true,
+
+  // --------------------------------------------------------------------------
+  // РАСПОЛОЖЕНИЕ МОДУЛЕЙ
+  // --------------------------------------------------------------------------
+  "modules-left": [
+    "custom/launcher",
+    "hyprland/workspaces",
+    "hyprland/submap",
+    "hyprland/window"
+  ],
+
+  "modules-center": [
+    "clock"
+  ],
+
+  "modules-right": [
+    "cpu",
+    "memory",
+    "custom/gpu",
+    "custom/cpu-temp",
+    "network",
+    "wireplumber",
+    "bluetooth",
+    "tray",
+    "custom/notification",
+    "custom/power"
+  ],
+
+  // --------------------------------------------------------------------------
+  // LAUNCHER -> FUZZEL
+  // --------------------------------------------------------------------------
+  // Связь с будущим конфигом Fuzzel намеренная:
+  // левый клик по логотипу открывает launcher.
+  "custom/launcher": {
+    "format": "󰣇",
+    "tooltip": true,
+    "tooltip-format": "Открыть Fuzzel",
+    "on-click": "fuzzel"
+  },
+
+  // --------------------------------------------------------------------------
+  // HYPRLAND WORKSPACES
+  // --------------------------------------------------------------------------
+  "hyprland/workspaces": {
+    // Показываем номера рабочих столов. Состояние active/empty красится через CSS.
+    "format": "{name}",
+
+    // Всегда держим 5 рабочих столов видимыми. 6, 7, 8... появятся динамически,
+    // если они реально существуют.
+    // Если захочешь 1-9 постоянно — замени массив на [1,2,3,4,5,6,7,8,9].
+    "persistent-workspaces": {
+      "*": [1, 2, 3, 4, 5]
+    },
+
+    // На мультимониторной системе каждый Waybar показывает workspaces своего экрана.
+    "all-outputs": false,
+
+    // Прокрутка колёсиком по списку workspaces переключает соседние столы.
+    "on-scroll-up": "hyprctl dispatch workspace e+1",
+    "on-scroll-down": "hyprctl dispatch workspace e-1",
+
+    // Не показываем специальные workspaces в основном списке.
+    // Если позже сделаем scratchpad — можем включить его отдельным модулем.
+    "show-special": false,
+
+    "sort-by": "number"
+  },
+
+  // --------------------------------------------------------------------------
+  // HYPRLAND SUBMAP
+  // --------------------------------------------------------------------------
+  // Обычно модуль скрыт. Он появится только если мы позже добавим submap'ы
+  // (например, отдельный режим управления окнами или хоткеями).
+  "hyprland/submap": {
+    "format": "󰌌  {}",
+    "tooltip": false,
+    "max-length": 20
+  },
+
+  // --------------------------------------------------------------------------
+  // АКТИВНОЕ ОКНО
+  // --------------------------------------------------------------------------
+  "hyprland/window": {
+    "format": "{}",
+    "max-length": 42,
+    "separate-outputs": true,
+    "rewrite": {
+      "^$": "Desktop"
+    }
+  },
+
+  // --------------------------------------------------------------------------
+  // ЧАСЫ + КАЛЕНДАРЬ В TOOLTIP
+  // --------------------------------------------------------------------------
+  "clock": {
+    "interval": 30,
+    "format": "󰥔  {:%H:%M}   ·   {:%a %d %b}",
+    "tooltip-format": "<tt><small>{calendar}</small></tt>",
+
+    // locale не задаём принудительно: Waybar использует системную локаль.
+    // Если захочешь всегда английские сокращения дней/месяцев, можно добавить:
+    // "locale": "en_US.UTF-8",
+
+    "calendar": {
+      "mode": "month",
+      "weeks-pos": "right",
+      "on-scroll": 1,
+      "iso8601": true,
+      "format": {
+        "months": "<span color='#c4b5fd'><b>{}</b></span>",
+        "days": "<span color='#e5e7eb'>{}</span>",
+        "weeks": "<span color='#6b7280'>W{}</span>",
+        "weekdays": "<span color='#a78bfa'><b>{}</b></span>",
+        "today": "<span color='#f5f3ff'><b><u>{}</u></b></span>"
+      }
+    }
+  },
+
+  // --------------------------------------------------------------------------
+  // CPU
+  // --------------------------------------------------------------------------
+  "cpu": {
+    "interval": 2,
+    "format": "󰻠  {usage}%",
+
+    // Эти имена превращаются в CSS-классы #cpu.warning / #cpu.critical.
+    "states": {
+      "warning": 70,
+      "critical": 90
+    },
+
+    // Открываем btop в Kitty. Позже в Hyprland добавим правило для класса
+    // waybar-btop, если захотим сделать его плавающим.
+    "on-click": "kitty --class waybar-btop -e btop"
+  },
+
+  // --------------------------------------------------------------------------
+  // RAM
+  // --------------------------------------------------------------------------
+  "memory": {
+    "interval": 2,
+    "format": "󰍛  {percentage}%",
+    "states": {
+      "warning": 75,
+      "critical": 90
+    },
+    "on-click": "kitty --class waybar-btop -e btop"
+  },
+
+  // --------------------------------------------------------------------------
+  // NVIDIA GPU
+  // --------------------------------------------------------------------------
+  // У Waybar нет отдельного встроенного NVIDIA-модуля, поэтому берём данные
+  // через nvidia-smi. Скрипт лежит рядом с конфигом и отдаёт JSON.
+  "custom/gpu": {
+    "exec": "$HOME/.config/waybar/scripts/gpu-nvidia.sh",
+    "return-type": "json",
+    "interval": 2,
+    "format": "{text}",
+    "tooltip": true,
+    "on-click": "kitty --class waybar-nvidia -e watch -n 1 nvidia-smi"
+  },
+
+  // --------------------------------------------------------------------------
+  // CPU TEMPERATURE
+  // --------------------------------------------------------------------------
+  // Отдельный скрипт автоматически пытается найти coretemp/k10temp/zenpower
+  // или подходящую thermal_zone. Поэтому конфиг не привязан к конкретному
+  // hwmon0/hwmon1, который может измениться после обновления ядра.
+  "custom/cpu-temp": {
+    "exec": "$HOME/.config/waybar/scripts/cpu-temp.sh",
+    "return-type": "json",
+    "interval": 2,
+    "format": "{text}",
+    "tooltip": true
+  },
+
+  // --------------------------------------------------------------------------
+  // СЕТЬ
+  // --------------------------------------------------------------------------
+  // interface специально не задан: Waybar сам выбирает активный интерфейс.
+  // Это удобно, если ты иногда переключаешься Ethernet <-> Wi-Fi.
+  "network": {
+    "interval": 2,
+
+    "format-wifi": "󰖩  {signalStrength}%",
+    "format-ethernet": "󰈀  {bandwidthDownBytes}",
+    "format-linked": "󰈀  linked",
+    "format-disconnected": "󰖪  offline",
+
+    "tooltip-format-wifi": "{essid}\n{ifname}: {ipaddr}/{cidr}\n↓ {bandwidthDownBytes}   ↑ {bandwidthUpBytes}\nSignal: {signalStrength}% ({signaldBm} dBm)",
+    "tooltip-format-ethernet": "{ifname}: {ipaddr}/{cidr}\nGateway: {gwaddr}\n↓ {bandwidthDownBytes}   ↑ {bandwidthUpBytes}",
+    "tooltip-format-disconnected": "Сеть не подключена",
+
+    // Открываем nmtui в Kitty. В будущем можем заменить это на GUI/quick-settings.
+    "on-click": "kitty --class waybar-network -e nmtui"
+  },
+
+  // --------------------------------------------------------------------------
+  // ЗВУК / PIPEWIRE + WIREPLUMBER
+  // --------------------------------------------------------------------------
+  "wireplumber": {
+    "format": "{icon}  {volume}%",
+    "format-muted": "󰖁  mute",
+    "format-icons": ["󰕿", "󰖀", "󰕾"],
+    "tooltip-format": "{node_name}\nVolume: {volume}%",
+
+    // ЛКМ -> полный микшер; ПКМ -> mute/unmute; колесо -> громкость +/- 5%.
+    "on-click": "pavucontrol",
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-scroll-up": "wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+",
+    "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+  },
+
+  // --------------------------------------------------------------------------
+  // BLUETOOTH
+  // --------------------------------------------------------------------------
+  "bluetooth": {
+    "format": "󰂯",
+    "format-disabled": "󰂲",
+    "format-off": "󰂲",
+    "format-connected": "󰂱 {num_connections}",
+    "tooltip-format": "Bluetooth: {status}",
+    "tooltip-format-connected": "{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}",
+
+    // blueman-manager — удобный GUI. Если Bluetooth тебе вообще не нужен,
+    // просто удали "bluetooth" из modules-right.
+    "on-click": "blueman-manager"
+  },
+
+  // --------------------------------------------------------------------------
+  // SYSTEM TRAY
+  // --------------------------------------------------------------------------
+  "tray": {
+    "icon-size": 16,
+    "spacing": 8,
+    "show-passive-items": false
+  },
+
+  // --------------------------------------------------------------------------
+  // УВЕДОМЛЕНИЯ -> SWAYNC
+  // --------------------------------------------------------------------------
+  // Это официальный формат интеграции SwayNC с Waybar.
+  // ЛКМ -> notification center, ПКМ -> Do Not Disturb.
+  "custom/notification": {
+    "tooltip": true,
+    "tooltip-format": "ЛКМ: центр уведомлений\nПКМ: режим Не беспокоить",
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "󱅫",
+      "none": "󰂜",
+      "dnd-notification": "󰂠",
+      "dnd-none": "󰪓",
+      "inhibited-notification": "󰂛",
+      "inhibited-none": "󰪑",
+      "dnd-inhibited-notification": "󰂛",
+      "dnd-inhibited-none": "󰪑"
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  },
+
+  // --------------------------------------------------------------------------
+  // POWER MENU -> FUZZEL --DMENU
+  // --------------------------------------------------------------------------
+  "custom/power": {
+    "format": "󰐥",
+    "tooltip": true,
+    "tooltip-format": "Питание / сеанс",
+    "on-click": "$HOME/.config/waybar/scripts/power-menu.sh"
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "ignore-gtk-theme": true,
+  "positionX": "right",
+  "positionY": "top",
+  "control-center-positionX": "right",
+  "control-center-positionY": "top",
+  "layer": "overlay",
+  "control-center-layer": "top",
+  "layer-shell": true,
+  "layer-shell-cover-screen": true,
+  "cssPriority": "user",
+  "control-center-margin-top": 12,
+  "control-center-margin-bottom": 12,
+  "control-center-margin-right": 12,
+  "control-center-margin-left": 12,
+  "control-center-exclusive-zone": true,
+  "notification-2fa-action": true,
+  "notification-inline-replies": false,
+  "notification-body-image-height": 110,
+  "notification-body-image-width": 220,
+  "timeout": 7,
+  "timeout-low": 4,
+  "timeout-critical": 0,
+  "notification-window-width": 430,
+  "notification-window-height": -1,
+  "fit-to-screen": false,
+  "relative-timestamps": true,
+  "control-center-width": 440,
+  "control-center-height": 680,
+  "keyboard-shortcuts": true,
+  "notification-grouping": true,
+  "image-visibility": "when-available",
+  "transition-time": 180,
+  "hide-on-clear": false,
+  "hide-on-action": true,
+  "text-empty": "No notifications",
+  "script-fail-notify": true,
+  "scripts": {},
+  "notification-visibility": {},
+  "widgets": [
+    "title",
+    "dnd",
+    "buttons-grid#quick-settings",
+    "volume",
+    "mpris",
+    "notifications"
+  ],
+  "widget-config": {
+    "notifications": {
+      "vexpand": true
+    },
+    "title": {
+      "text": "Notifications",
+      "clear-all-button": true,
+      "button-text": "Clear"
+    },
+    "dnd": {
+      "text": "Do Not Disturb"
+    },
+    "buttons-grid#quick-settings": {
+      "buttons-per-row": 4,
+      "actions": [
+        {
+          "label": "󰖩  Wi-Fi",
+          "type": "toggle",
+          "active": true,
+          "command": "sh -c '[ \"$SWAYNC_TOGGLE_STATE\" = true ] && nmcli radio wifi on || nmcli radio wifi off'",
+          "update-command": "sh -c '[ \"$(nmcli radio wifi 2>/dev/null)\" = enabled ] && echo true || echo false'"
+        },
+        {
+          "label": "󰂯  Bluetooth",
+          "type": "toggle",
+          "active": false,
+          "command": "sh -c '[ \"$SWAYNC_TOGGLE_STATE\" = true ] && bluetoothctl power on || bluetoothctl power off'",
+          "update-command": "sh -c 'bluetoothctl show 2>/dev/null | grep -q \"Powered: yes\" && echo true || echo false'"
+        },
+        {
+          "label": "󰕾  Audio",
+          "type": "normal",
+          "command": "pavucontrol"
+        },
+        {
+          "label": "󰤨  Network",
+          "type": "normal",
+          "command": "kitty --class waybar-network -e nmtui"
+        }
+      ]
+    },
+    "volume": {
+      "label": "󰕾",
+      "show-per-app": false,
+      "show-per-app-icon": true,
+      "show-per-app-label": false,
+      "expand-per-app": false,
+      "empty-list-label": "No active audio streams",
+      "expand-button-label": "󰐕",
+      "collapse-button-label": "󰐖"
+    },
+    "mpris": {
+      "blacklist": [],
+      "autohide": true,
+      "show-album-art": "when-available",
+      "loop-carousel": true
+    }
+  }
+}

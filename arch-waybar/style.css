@@ -1,0 +1,302 @@
+/* ============================================================================
+ * WAYBAR STYLE — dark / purple power-user theme
+ * ============================================================================
+ * Это GTK CSS, а не браузерный CSS. Большинство привычных свойств работает,
+ * но не абсолютно всё из современного web CSS поддерживается GTK.
+ *
+ * Главная идея:
+ *   - прозрачный фон окна Waybar;
+ *   - отдельные тёмные "капсулы" для модулей;
+ *   - фиолетовый акцент только там, где он действительно нужен;
+ *   - warning/critical подсвечиваются мягко, а не превращают панель в светофор.
+ * ========================================================================== */
+
+/* --------------------------------------------------------------------------
+ * ПАЛИТРА
+ * Меняя эти значения, можно быстро перекрасить почти всю панель.
+ * -------------------------------------------------------------------------- */
+@define-color bg          rgba(12, 13, 20, 0.86);
+@define-color bg_hover    rgba(35, 31, 55, 0.94);
+@define-color bg_strong   rgba(20, 21, 31, 0.96);
+
+@define-color fg          #e8e7ef;
+@define-color fg_dim      #9d9aaa;
+
+@define-color purple      #a78bfa;
+@define-color purple_hi   #c4b5fd;
+@define-color violet      #7c5cff;
+
+@define-color warning     #f2c97d;
+@define-color critical    #ff7a90;
+@define-color ok          #94d6b4;
+
+@define-color border      rgba(196, 181, 253, 0.14);
+@define-color border_hi   rgba(196, 181, 253, 0.36);
+
+/* --------------------------------------------------------------------------
+ * БАЗОВЫЙ ШРИФТ
+ * JetBrainsMono Nerd Font нужен и для текста, и для Nerd Font icons.
+ * -------------------------------------------------------------------------- */
+* {
+    font-family: "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
+    font-size: 12px;
+    min-height: 0;
+    border: none;
+}
+
+/* Само окно Waybar делаем прозрачным — визуальные блоки рисуются модулями. */
+window#waybar {
+    background: transparent;
+    color: @fg;
+}
+
+/* Можно использовать этот класс, если позже появится полноэкранный режим/скрипт,
+ * который будет добавлять class к Waybar. Пока правило просто безвредно. */
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+/* --------------------------------------------------------------------------
+ * ОБЩИЙ ВИД ПРАКТИЧЕСКИ ВСЕХ МОДУЛЕЙ
+ * -------------------------------------------------------------------------- */
+#custom-launcher,
+#workspaces,
+#submap,
+#window,
+#clock,
+#cpu,
+#memory,
+#custom-gpu,
+#custom-cpu-temp,
+#network,
+#wireplumber,
+#bluetooth,
+#tray,
+#custom-notification,
+#custom-power {
+    background: @bg;
+    color: @fg;
+    border: 1px solid @border;
+    border-radius: 11px;
+    padding: 0 10px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.20);
+}
+
+/* Hover оставляем довольно спокойным: интерфейс должен ощущаться быстрым,
+ * но не "мигать" от каждого движения мыши. */
+#custom-launcher:hover,
+#cpu:hover,
+#memory:hover,
+#custom-gpu:hover,
+#custom-cpu-temp:hover,
+#network:hover,
+#wireplumber:hover,
+#bluetooth:hover,
+#custom-notification:hover,
+#custom-power:hover {
+    background: @bg_hover;
+    border-color: @border_hi;
+}
+
+/* --------------------------------------------------------------------------
+ * LAUNCHER
+ * -------------------------------------------------------------------------- */
+#custom-launcher {
+    color: @purple_hi;
+    font-size: 17px;
+    padding: 0 12px;
+}
+
+#custom-launcher:hover {
+    color: #ffffff;
+    background-image: linear-gradient(90deg, #6f52e5, #9d5cf5);
+}
+
+/* --------------------------------------------------------------------------
+ * WORKSPACES
+ * -------------------------------------------------------------------------- */
+#workspaces {
+    padding: 3px 5px;
+}
+
+#workspaces button {
+    color: @fg_dim;
+    background: transparent;
+    border-radius: 8px;
+    padding: 0 9px;
+    margin: 0 1px;
+    min-width: 20px;
+    transition: all 140ms ease;
+}
+
+/* В актуальном модуле Hyprland используется .active, а не .focused. */
+#workspaces button.active {
+    color: #ffffff;
+    background-image: linear-gradient(90deg, #6f52e5, #9d5cf5);
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.35);
+}
+
+#workspaces button.visible {
+    color: @purple_hi;
+}
+
+#workspaces button.empty {
+    color: rgba(157, 154, 170, 0.48);
+}
+
+#workspaces button:hover {
+    color: @fg;
+    background: rgba(167, 139, 250, 0.12);
+}
+
+#workspaces button.urgent {
+    color: #ffffff;
+    background: rgba(255, 122, 144, 0.70);
+}
+
+/* --------------------------------------------------------------------------
+ * SUBMAP
+ * Появляется только когда в Hyprland активирован submap.
+ * -------------------------------------------------------------------------- */
+#submap {
+    color: @purple_hi;
+    border-color: rgba(167, 139, 250, 0.42);
+}
+
+/* --------------------------------------------------------------------------
+ * ACTIVE WINDOW
+ * Делаем его более тихим, чтобы название окна не спорило с метриками.
+ * -------------------------------------------------------------------------- */
+#window {
+    color: @fg_dim;
+    background: rgba(12, 13, 20, 0.66);
+}
+
+/* Когда окон нет, Waybar иногда добавляет класс empty. */
+window#waybar.empty #window {
+    opacity: 0.65;
+}
+
+/* --------------------------------------------------------------------------
+ * CLOCK — главный центральный акцент
+ * -------------------------------------------------------------------------- */
+#clock {
+    color: #ffffff;
+    font-weight: 700;
+    padding: 0 15px;
+    background-image: linear-gradient(90deg, rgba(111, 82, 229, 0.92), rgba(157, 92, 245, 0.92));
+    border-color: rgba(216, 205, 255, 0.30);
+    box-shadow: 0 4px 18px rgba(85, 55, 190, 0.28);
+}
+
+/* --------------------------------------------------------------------------
+ * HARDWARE METRICS
+ * -------------------------------------------------------------------------- */
+#cpu,
+#memory,
+#custom-gpu,
+#custom-cpu-temp {
+    font-variant-numeric: tabular-nums;
+}
+
+#cpu.warning,
+#memory.warning,
+#custom-gpu.warning,
+#custom-cpu-temp.warning {
+    color: @warning;
+    border-color: rgba(242, 201, 125, 0.35);
+}
+
+#cpu.critical,
+#memory.critical,
+#custom-gpu.critical,
+#custom-cpu-temp.critical {
+    color: @critical;
+    border-color: rgba(255, 122, 144, 0.45);
+    background: rgba(70, 24, 37, 0.88);
+}
+
+/* Если GPU/температура недоступны, скрипты используют класс unavailable. */
+#custom-gpu.unavailable,
+#custom-cpu-temp.unavailable {
+    color: @fg_dim;
+    opacity: 0.65;
+}
+
+/* --------------------------------------------------------------------------
+ * NETWORK
+ * -------------------------------------------------------------------------- */
+#network.disconnected,
+#network.disabled {
+    color: @critical;
+}
+
+#network.wifi,
+#network.ethernet {
+    color: @fg;
+}
+
+/* --------------------------------------------------------------------------
+ * AUDIO
+ * -------------------------------------------------------------------------- */
+#wireplumber.muted {
+    color: @fg_dim;
+}
+
+/* --------------------------------------------------------------------------
+ * BLUETOOTH
+ * -------------------------------------------------------------------------- */
+#bluetooth.connected {
+    color: @purple_hi;
+}
+
+#bluetooth.disabled,
+#bluetooth.off {
+    color: @fg_dim;
+}
+
+/* --------------------------------------------------------------------------
+ * TRAY
+ * У tray внутренние элементы рисуются приложениями, поэтому его стилизация
+ * намеренно минимальная.
+ * -------------------------------------------------------------------------- */
+#tray {
+    padding: 0 9px;
+}
+
+#tray > .needs-attention {
+    background: rgba(255, 122, 144, 0.18);
+}
+
+/* --------------------------------------------------------------------------
+ * NOTIFICATIONS + POWER
+ * -------------------------------------------------------------------------- */
+#custom-notification {
+    color: @purple_hi;
+    font-size: 15px;
+}
+
+#custom-power {
+    color: @critical;
+    font-size: 15px;
+}
+
+#custom-power:hover {
+    color: #ffffff;
+    background: rgba(150, 45, 70, 0.92);
+    border-color: rgba(255, 122, 144, 0.45);
+}
+
+/* --------------------------------------------------------------------------
+ * TOOLTIPS
+ * -------------------------------------------------------------------------- */
+tooltip {
+    background: @bg_strong;
+    border: 1px solid @border_hi;
+    border-radius: 10px;
+}
+
+tooltip label {
+    color: @fg;
+    padding: 7px 9px;
+}

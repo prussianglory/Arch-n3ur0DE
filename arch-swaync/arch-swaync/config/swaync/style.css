@@ -1,0 +1,367 @@
+/* ==========================================================================
+ * SwayNC — Arch + Hyprland rice
+ * File: ~/.config/swaync/style.css
+ *
+ * Palette matches Kitty / Waybar / Fuzzel / Starship.
+ * Blur is intentionally handled by Hyprland layer rules.
+ * ========================================================================== */
+
+@define-color bg         rgba(11, 11, 18, 0.93);
+@define-color bg-solid   #0b0b12;
+@define-color surface    rgba(24, 22, 34, 0.94);
+@define-color surface2   rgba(33, 29, 53, 0.94);
+@define-color surface3   rgba(48, 42, 73, 0.96);
+
+@define-color text       #f1eff8;
+@define-color text-soft  #cbc8d8;
+@define-color muted      #8f8b9c;
+@define-color muted2     #5b5769;
+
+@define-color purple     #7c6cff;
+@define-color purple2    #6d5dfc;
+@define-color lavender   #b487ff;
+
+@define-color red        #ff6b81;
+@define-color green      #78dba9;
+@define-color yellow     #e8c97a;
+@define-color cyan       #6fd6e5;
+
+@define-color border     rgba(124, 108, 255, 0.38);
+@define-color borderdim  rgba(255, 255, 255, 0.07);
+
+* {
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    color: @text-soft;
+    font-size: 13px;
+    outline: none;
+    box-shadow: none;
+}
+
+.blank-window,
+.floating-notifications {
+    background: transparent;
+}
+
+/* CONTROL CENTER */
+.control-center {
+    background: @bg;
+    border: 1px solid @border;
+    border-radius: 18px;
+    padding: 12px;
+}
+
+.control-center-list {
+    background: transparent;
+}
+
+/* TITLE */
+.widget-title {
+    margin: 2px 4px 8px 4px;
+}
+
+.widget-title > label {
+    color: @text;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.widget-title button {
+    background: @surface2;
+    color: @text-soft;
+    border: 1px solid @borderdim;
+    border-radius: 10px;
+    padding: 7px 12px;
+}
+
+.widget-title button:hover {
+    background: @surface3;
+    border-color: @border;
+    color: @text;
+}
+
+.widget-title button:active {
+    background: @purple2;
+    color: #ffffff;
+}
+
+/* DO NOT DISTURB */
+.widget-dnd {
+    background: @surface;
+    border: 1px solid @borderdim;
+    border-radius: 12px;
+    margin: 4px;
+    padding: 8px 10px;
+}
+
+.widget-dnd > switch {
+    background: @surface3;
+    border: 1px solid @borderdim;
+    border-radius: 999px;
+    min-width: 42px;
+    min-height: 22px;
+}
+
+.widget-dnd > switch:checked {
+    background: @purple2;
+    border-color: @purple;
+}
+
+.widget-dnd > switch slider {
+    background: @text;
+    border-radius: 999px;
+    min-width: 16px;
+    min-height: 16px;
+}
+
+/* QUICK SETTINGS */
+.widget-buttons-grid {
+    margin: 5px 4px;
+}
+
+.widget-buttons-grid flowbox {
+    background: transparent;
+}
+
+.widget-buttons-grid flowboxchild {
+    padding: 3px;
+}
+
+.widget-buttons-grid button {
+    background: @surface;
+    color: @text-soft;
+    border: 1px solid @borderdim;
+    border-radius: 12px;
+    min-height: 42px;
+    padding: 7px 8px;
+}
+
+.widget-buttons-grid button:hover {
+    background: @surface2;
+    border-color: @border;
+    color: @text;
+}
+
+.widget-buttons-grid button.toggle:checked,
+.widget-buttons-grid button:checked,
+.widget-buttons-grid button.active {
+    background: @purple2;
+    border-color: @purple;
+    color: #ffffff;
+}
+
+/* VOLUME */
+.widget-volume {
+    background: @surface;
+    border: 1px solid @borderdim;
+    border-radius: 12px;
+    margin: 5px 4px;
+    padding: 10px 12px;
+}
+
+.widget-volume scale trough {
+    background: @surface3;
+    min-height: 6px;
+    border-radius: 999px;
+}
+
+.widget-volume scale highlight {
+    background: @purple;
+    border-radius: 999px;
+}
+
+.widget-volume scale slider {
+    background: @text;
+    border-radius: 999px;
+    min-width: 14px;
+    min-height: 14px;
+}
+
+.widget-volume button {
+    background: transparent;
+    border-radius: 8px;
+    padding: 4px 7px;
+}
+
+.widget-volume button:hover {
+    background: @surface3;
+}
+
+/* MPRIS */
+.widget-mpris {
+    background: @surface;
+    border: 1px solid @borderdim;
+    border-radius: 14px;
+    margin: 5px 4px;
+    padding: 4px;
+}
+
+.widget-mpris-player {
+    padding: 8px;
+}
+
+.widget-mpris-title {
+    color: @text;
+    font-weight: 700;
+}
+
+.widget-mpris-subtitle {
+    color: @muted;
+}
+
+.widget-mpris button {
+    background: @surface2;
+    border: 1px solid @borderdim;
+    border-radius: 9px;
+    padding: 5px 8px;
+}
+
+.widget-mpris button:hover {
+    background: @surface3;
+    border-color: @border;
+}
+
+/* NOTIFICATION CARDS */
+.notification-row {
+    outline: none;
+    background: transparent;
+}
+
+.notification-background {
+    background: transparent;
+    padding: 0;
+}
+
+.notification {
+    background: @surface;
+    border: 1px solid @borderdim;
+    border-radius: 14px;
+    margin: 5px 4px;
+    padding: 0;
+}
+
+.notification:hover {
+    background: @surface2;
+    border-color: @border;
+}
+
+.notification-content {
+    background: transparent;
+    padding: 10px;
+    border-radius: 14px;
+}
+
+.summary {
+    color: @text;
+    font-weight: 700;
+}
+
+.time {
+    color: @muted2;
+    font-size: 11px;
+}
+
+.body {
+    color: @text-soft;
+}
+
+.notification image {
+    border-radius: 10px;
+}
+
+/* URGENCY */
+.notification.low {
+    opacity: 0.86;
+}
+
+.notification.normal {
+    border-color: @borderdim;
+}
+
+.notification.critical {
+    border-color: rgba(255, 107, 129, 0.72);
+    background: rgba(45, 20, 30, 0.95);
+}
+
+.notification.critical .summary {
+    color: #ffd7df;
+}
+
+/* CLOSE BUTTON */
+.close-button {
+    background: @surface3;
+    color: @text-soft;
+    border: 1px solid @borderdim;
+    border-radius: 999px;
+    min-width: 24px;
+    min-height: 24px;
+    padding: 0;
+    margin: 6px;
+}
+
+.close-button:hover {
+    background: @red;
+    color: #ffffff;
+    border-color: @red;
+}
+
+/* NOTIFICATION ACTIONS */
+.notification-action {
+    background: @surface2;
+    color: @text-soft;
+    border: 1px solid @borderdim;
+    border-radius: 9px;
+    margin: 4px;
+    padding: 7px 10px;
+}
+
+.notification-action:hover {
+    background: @surface3;
+    color: @text;
+    border-color: @border;
+}
+
+.notification-action:active {
+    background: @purple2;
+    color: #ffffff;
+}
+
+/* GROUPS */
+.notification-group {
+    margin: 3px 0 6px 0;
+}
+
+.notification-group:focus .notification {
+    border-color: @purple;
+}
+
+/* SCROLLBAR */
+scrollbar {
+    background: transparent;
+}
+
+scrollbar trough {
+    background: transparent;
+    margin: 4px 0;
+}
+
+scrollbar slider {
+    background: rgba(124, 108, 255, 0.38);
+    border-radius: 999px;
+    min-width: 5px;
+}
+
+scrollbar slider:hover {
+    background: rgba(124, 108, 255, 0.62);
+}
+
+/* TOOLTIP */
+tooltip {
+    background: @bg-solid;
+    border: 1px solid @border;
+    border-radius: 10px;
+}
+
+tooltip label {
+    color: @text;
+    padding: 5px;
+}

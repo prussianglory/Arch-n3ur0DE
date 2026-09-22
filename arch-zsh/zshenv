@@ -1,0 +1,30 @@
+# ==============================================================================
+# Zsh — минимальный bootstrap
+# Файл установки: ~/.zshenv
+#
+# .zshenv читается КАЖДЫМ экземпляром Zsh, включая неинтерактивные shell.
+# Поэтому здесь держим только переменные окружения и перенос Zsh-конфигов
+# в ~/.config/zsh. Алиасы, prompt и плагины сюда помещать не нужно.
+# ==============================================================================
+
+# Храним основной Zsh-конфиг по XDG-схеме.
+export ZDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
+
+# XDG-каталоги. Не перезаписываем значения, если пользователь уже задал их.
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+
+# Локальные пользовательские программы.
+# ${(U)path} делает элементы уникальными, не ломая порядок.
+typeset -U path PATH
+path=("$HOME/.local/bin" "$HOME/bin" $path)
+
+# Наш основной редактор.
+# Kitty также использует $EDITOR / $VISUAL.
+export EDITOR="${EDITOR:-nvim}"
+export VISUAL="${VISUAL:-nvim}"
+
+# Цветные man-страницы через less.
+export LESS="${LESS:--R}"
